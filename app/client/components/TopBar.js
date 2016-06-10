@@ -25,7 +25,9 @@ export default class TopBar extends React.Component {
 
     var logoutLink, createAccountLink;
     if(loggedIn){
-      logoutLink = (<Nav pullRight><NavItem href="#" onClick={ logout }>Log out</NavItem></Nav>);
+      logoutLink = (<Nav pullRight>
+          <NavItem href="#" onClick={ logout }>Log out</NavItem>
+        </Nav>);
     } else {
       createAccountLink = <NavItem href="#" onClick={$ => { goTo(router.createAccount) }}>Create account</NavItem>;
     }

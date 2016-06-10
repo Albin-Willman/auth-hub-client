@@ -64,6 +64,6 @@ function transformToServiceObjects(serviceData) {
   return {
     id: serviceData.id,
     label: serviceData.attributes.service,
-    createdAt: serviceData.attributes.created_at
+    createdAt: serviceData.attributes['created-at']
   };
 }

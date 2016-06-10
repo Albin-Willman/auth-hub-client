@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { goToRoute } from 'services/route-services';
+import { goToRoute } from 'auth-hub-module/lib/services/route-services';
 
 import { ConnectedServices } from 'lib/connected-services';
 import ServiceCard from 'components/ServiceCard';

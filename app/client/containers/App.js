@@ -6,7 +6,7 @@ import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
 import PageHeader from 'react-bootstrap/lib/PageHeader';
 
-import LoginPage from 'components/LoginPage';
+
 import ServicesPage from 'components/ServicesPage';
 import LoadingScreen from 'components/LoadingScreen';
 import AllServicesPage from 'containers/AllServicesPage';
@@ -15,12 +15,9 @@ import TopBar from 'components/TopBar';
 
 import { router } from 'lib/router';
 
-import {
-  setUsername,
-  setPassword
-} from 'actions/user-actions';
-
-import { goToRoute } from 'services/route-services';
+import LoginPage from 'auth-hub-module/lib/components/LoginPage';
+import { setUsername, setPassword } from 'auth-hub-module/lib/actions/user-actions';
+import { goToRoute } from 'auth-hub-module/lib/services/route-services';
 
 import { login, createUser } from 'services/user-services';
 import { 
@@ -126,7 +123,7 @@ export default class App extends React.Component {
     return <TopBar
       goTo={(route) => { dispatch(goToRoute(route)) }}
       loggedIn={this.verifyLoggedIn()}
-      logout={$ => { dispatch(logout()) }}
+      logout={$ => { dispatch(logOut('Services')) }}
       router={router}
       />
   }
@@ -135,15 +132,13 @@ export default class App extends React.Component {
     var topNav  = this.buildTopNav();
     var content = this.buildContent();
     return (
-      <Grid>
+      <div>
         {topNav}
-        <Row>
-          <Col xs={12}>
-            <h1>{"Services"}</h1>
-            {content}
-          </Col>
-        </Row>
-      </Grid>
+        <Grid>
+          <h1>{"Services"}</h1>
+          {content}
+        </Grid>
+      </div>
     );
   }
 }

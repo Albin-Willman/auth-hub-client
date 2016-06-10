@@ -6,7 +6,7 @@ module.exports = {
     appName: 'auth-hub-client',
 
     host: '0.0.0.0',
-    port: 3000,
+    port: 3002,
 
     // configure the proxy to the dev api server
     proxyIsEnabled: true,
@@ -15,7 +15,7 @@ module.exports = {
 
     // forward following urls to the api server
     proxyUrls: [
-        '/foo*',
+        '/api*',
     ],
 
     // forward following rules

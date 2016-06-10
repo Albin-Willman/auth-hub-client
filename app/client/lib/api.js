@@ -1,5 +1,5 @@
 let config = {
-  baseUrl: 'http://localhost:5000/api/v1'
+  baseUrl: '/api/v1'
   // baseUrl: 'https://share-tracker.herokuapp.com/api/'
 }
 

@@ -36,6 +36,7 @@ export default class ServicesTable extends React.Component {
 
 function buildServiceRowFactory(logout){
   return function (data) {
+    console.log('data', data);
     return (<tr key={data.id}>
         <td>{data.label}</td>
         <td>{data.createdAt}</td>
