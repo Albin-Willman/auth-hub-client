@@ -38,7 +38,6 @@ export default class TopBar extends React.Component {
           <NavItem href="#" onClick={$ => { goTo(router.allServices) }}>All services</NavItem>
         </Nav>
         {logoutLink}
-        
       </Navbar.Collapse>);
   }
 

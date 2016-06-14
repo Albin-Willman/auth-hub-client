@@ -20,6 +20,32 @@ export function verifyUser(user, callback, failCallback){
   });
 }
 
+export function findUser(token, callback, failCallback){
+  $.ajax({
+    method: 'GET',
+    url: buildUrl('/users/' + token + '/activate'),
+    dataType: 'json',
+    success: callback,
+    error: failCallback
+  })
+}
+
+export function activateUser(token, user, callback, failCallback){
+  $.ajax({
+    method: 'PATCH',
+    url: buildUrl('/users/' + token + '/activate'),
+    data: {
+      "user": {
+        "password": user.password
+      },
+      "service": "Services"
+    },
+    dataType: 'json',
+    success: callback,
+    error: failCallback
+  });
+}
+
 export function createUser(user, callback, failCallback){
   $.ajax({
     method: 'POST',
@@ -27,8 +53,7 @@ export function createUser(user, callback, failCallback){
     dataType: 'json',
     data: {
       "user": {
-        "email": user.username,
-        "password": user.password
+        "email": user.username
       }
     },
     success: callback,
@@ -59,7 +84,7 @@ function makeAuthorizedRequest(token, verb, path, payload, callback, failCallbac
     data: payload,
     success: callback,
     error: failCallback
-  }); 
+  });
 }
 
 function buildUrl(path) {

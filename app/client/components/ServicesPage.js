@@ -19,7 +19,7 @@ export default class ServicesPage extends React.Component {
 
     var { services, logout, referesh } = this.props;
     return (
-      <ServicesTable 
+      <ServicesTable
             services={services}
             logout={logout}
             referesh={referesh}

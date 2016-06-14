@@ -9,6 +9,9 @@ import PageHeader from 'react-bootstrap/lib/PageHeader';
 
 import ServicesPage from 'components/ServicesPage';
 import LoadingScreen from 'components/LoadingScreen';
+import CreateUserForm from 'components/CreateUserForm';
+import ActivateUserForm from 'components/ActivateUserForm';
+
 import AllServicesPage from 'containers/AllServicesPage';
 import Link from 'components/Link';
 import TopBar from 'components/TopBar';
@@ -18,9 +21,10 @@ import { router } from 'lib/router';
 import LoginPage from 'auth-hub-module/lib/components/LoginPage';
 import { setUsername, setPassword } from 'auth-hub-module/lib/actions/user-actions';
 import { goToRoute } from 'auth-hub-module/lib/services/route-services';
+import { setRoute } from 'auth-hub-module/lib/actions/route-actions';
 
-import { login, createUser } from 'services/user-services';
-import { 
+import { login, createUser, activateUser, findUser } from 'services/user-services';
+import {
   logOut,
   reloadServices,
   logOutAll } from 'services/services-services';
@@ -43,10 +47,29 @@ export default class App extends React.Component {
     return false;
   }
 
+  state = {
+    params: {}
+  }
+  setParams(paramString) {
+    if(!paramString){
+      return;
+    }
+    var params = {}
+    var paramArr = paramString.split('&');
+    for (var i in paramArr){
+      var param = paramArr[i].split('=');
+      params[param[0]] = param[1];
+    }
+    this.setState({ params: params});
+  }
+
   componentWillMount() {
     var { dispatch, routes } = this.props;
-    var urlPath = location.hash.slice(1);
+    var parts = location.hash.slice(1).split("?");
+    var urlPath = parts[0]
+    this.setParams(parts[1]);
     var resultingPath = urlPath;
+
     var authorized = this.allowWithoutAuthorization(urlPath);
     if(!authorized){
       authorized = this.verifyLoggedIn()
@@ -55,15 +78,17 @@ export default class App extends React.Component {
       resultingPath = router.login;
     }
     if((routes.currentPage) != urlPath){
-      dispatch(goToRoute(resultingPath));
+      dispatch(setRoute(resultingPath));
     }
   }
 
   allowWithoutAuthorization(path) {
     switch (path) {
-      case router.allServices: return true;
-      case router.login:       return true;
-      default:                 return false;
+      case router.allServices:      return true;
+      case router.login:            return true;
+      case router.createAccount:    return true;
+      case router.activateAccount:  return true;
+      default:                      return false;
     }
   }
 
@@ -78,12 +103,26 @@ export default class App extends React.Component {
         />)
   }
 
+  buildActivateAccountPage(){
+    var { dispatch, user } = this.props;
+    var token = this.state.params.token;
+    if(!token){
+      dispatch(goToRoute(router.login))
+    }
+    return (<ActivateUserForm
+          loadUser={ $ => { dispatch(findUser(token)) }}
+          onPasswordChange={ password => { dispatch(setPassword(password))} }
+          submit={ $=> { dispatch(activateUser(token))} }
+          title={'Activate account'}
+          user={user}
+        />)
+  }
+
   buildCreateAccountPage() {
     var { dispatch, user } = this.props;
-    return (<LoginPage
+    return (<CreateUserForm
           onUsernameChange={ username => { dispatch(setUsername(username))} }
-          onPasswordChange={ password => { dispatch(setPassword(password))} }
-          submit={ $=> { dispatch(createUser())} }
+          submit={ $=> { dispatch(activateUser())} }
           title={'Create account'}
           user={user}
         />)
@@ -109,11 +148,12 @@ export default class App extends React.Component {
     }
     let Page;
     switch (routes.currentPage) {
-      case router.login:         Page = this.buildLoginPage(); break;
-      case router.myServices:    Page = this.buildServicesPage(); break;
-      case router.allServices:   Page = <AllServicesPage/>; break;
-      case router.createAccount: Page = this.buildCreateAccountPage(); break;
-      default:                   Page = this.buildLoginPage(); break;
+      case router.login:           Page = this.buildLoginPage(); break;
+      case router.myServices:      Page = this.buildServicesPage(); break;
+      case router.allServices:     Page = <AllServicesPage/>; break;
+      case router.createAccount:   Page = this.buildCreateAccountPage(); break;
+      case router.activateAccount: Page = this.buildActivateAccountPage(); break;
+      default:                     Page = this.buildLoginPage(); break;
     }
     return Page;
   }
